@@ -5,8 +5,8 @@ module.exports = (sequelize, DataTypes) => {
       name: { type: DataTypes.STRING(20), allowNull: false },
     },
     {
-      charset: 'utf8mb4',
-      collate: 'utf8_general_ci',
+      charset: 'utf8',
+      collate: 'utf8_general_ci', // 한글 저장
     },
   );
   HashTag.associate = db => {};
