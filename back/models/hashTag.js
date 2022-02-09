@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-  const HashTag = sequelize.define(
-    'HashTag',
+  const Hashtag = sequelize.define(
+    'Hashtag',
     {
       name: { type: DataTypes.STRING(20), allowNull: false },
     },
@@ -9,6 +9,8 @@ module.exports = (sequelize, DataTypes) => {
       collate: 'utf8_general_ci', // 한글 저장
     },
   );
-  HashTag.associate = db => {};
-  return HashTag;
+  Hashtag.associate = db => {
+    db.Hashtag.belongsToMany(db.Post, { through: 'PostHashtag' });
+  };
+  return Hashtag;
 };
