@@ -19,37 +19,32 @@ import {
 } from '../reducer/user';
 /* login */
 function loginAPI(data) {
-  return Axios.post('/api/login', data);
+  return Axios.post('/user/login', data);
 }
 
 function* login(action) {
   try {
-    //const result = yield call(loginAPI, action.data);
-    yield delay(1000);
-    console.log('login* run');
+    const result = yield call(loginAPI, action.data);
     console.log(action.data);
     yield put({
       type: LOG_IN_SUCCESS,
-      data: action.data,
+      data: result.data,
     });
-  } catch (error) {
-    console.log('onerror');
+  } catch (err) {
     yield put({
       type: LOG_IN_FAILURE,
-      error: 'error.response.data',
+      error: err.response.data,
     });
   }
 }
 /* logout */
 function logoutAPI(data) {
-  return Axios.post('./login', data);
+  return Axios.post('/user/logout', data);
 }
 
 function* logout(action) {
   try {
-    //const result = yield call(logoutAPI, action.data);
-    yield delay(1000);
-    console.log('loglogout* action : ' + action.data);
+    const result = yield call(logoutAPI, action.data);
     console.log(action.data);
     yield put({
       type: LOG_OUT_SUCCESS,
@@ -65,7 +60,7 @@ function* logout(action) {
 /* signup*/
 
 function signUpAPI(data) {
-  return Axios.post('http://localhost:4000/users', data);
+  return Axios.post('user', data);
 }
 
 function* signup(action) {
@@ -112,7 +107,7 @@ function* follow(action) {
 
 /* signup*/
 function unfollowApi(data) {
-  return Axios.post('./login', data);
+  return Axios.post('user', data);
 }
 
 function* unfollow(action) {

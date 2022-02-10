@@ -1,5 +1,5 @@
 import { Button, Input } from 'antd';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Link from 'next/Link';
 import styled from 'styled-components';
 import { Form } from 'antd';
@@ -18,7 +18,13 @@ function LoginForm() {
   const dispatch = useDispatch();
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
-  const { logInLoading } = useSelector(state => state.user);
+  const { logInLoading, logInError } = useSelector(state => state.user);
+
+  useEffect(() => {
+    if (logInError) {
+      alert(logInError);
+    }
+  }, logInError);
 
   const onSubmitForm = useCallback(() => {
     dispatch(logInRequestAction({ email, password }));

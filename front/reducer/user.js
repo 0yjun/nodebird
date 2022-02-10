@@ -28,9 +28,8 @@ export const initialState = {
   unfollowError: false,
 
   me: null,
-  nickname: null,
   signUpData: {},
-  logInData: {},
+  loginData: {},
 };
 
 export const LOG_IN_REQUEST = 'LOG_IN_REQUEST';
@@ -67,14 +66,6 @@ export const logInRequestAction = data => {
 export const logoutRequestAction = () => ({
   type: LOG_OUT_REQUEST,
 });
-const dummyUser = data => ({
-  ...data,
-  nickname: 'jun',
-  id: '1',
-  Posts: [{ id: 1 }],
-  Followings: [{ nickname: shortid.generate() }, { nickname: shortid.generate() }, { nickname: shortid.generate() }],
-  Followers: [{ nickname: shortid.generate() }, { nickname: shortid.generate() }, { nickname: shortid.generate() }],
-});
 
 const reducer = (state = initialState, action) => {
   return produce(state, draft => {
@@ -87,9 +78,8 @@ const reducer = (state = initialState, action) => {
         break;
       case LOG_IN_SUCCESS:
         draft.logInLoading = false;
+        draft.me = action.data;
         draft.logInDone = true;
-        draft.logInError = null;
-        draft.me = dummyUser(action.data);
         break;
       case LOG_IN_FAILURE:
         draft.logInLoading = false;

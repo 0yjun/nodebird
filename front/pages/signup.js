@@ -17,7 +17,7 @@ const SignUp = () => {
   const [passwordChk, setPasswordChk] = useState('');
   const [passwordError, setPasswordError] = useState(false);
   const dispatch = useDispatch();
-  const { signUpLoading, signUpDone, signUpError } = useSelector(state => state.user);
+  const { signUpLoading, signUpDone, signUpError, me, logInError } = useSelector(state => state.user);
 
   useEffect(() => {
     if (signUpDone) {
@@ -30,6 +30,12 @@ const SignUp = () => {
       alert(signUpError);
     }
   }, [signUpError]);
+
+  useEffect(() => {
+    if (me && me.id) {
+      Router.replace('/');
+    }
+  }, [me]);
 
   const onChangePasswordChk = useCallback(
     e => {
