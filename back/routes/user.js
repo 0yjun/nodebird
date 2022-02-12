@@ -4,9 +4,10 @@ const { User, Post } = require('../models');
 const bcypt = require('bcrypt');
 const passport = require('passport');
 const db = require('../models');
+const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 
 /*로그인 */
-router.post('/login', (req, res, next) => {
+router.post('/login', isNotLoggedIn, (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
     if (err) {
       console.error(err);
@@ -55,7 +56,7 @@ router.post('/logout', (req, res, next) => {
 });
 
 /*회원가입*/
-router.post('/', async (req, res, next) => {
+router.post('/', isNotLoggedIn, async (req, res, next) => {
   console.log('post user 요청');
   try {
     const exUser = await User.findOne({
