@@ -2,6 +2,10 @@ import produce from 'immer';
 import shortid from 'shortid';
 
 export const initialState = {
+  /*로그인 정보 */
+  loadUserDone: false,
+  loadUserLoading: false, //로그인 시도중
+  loadUserError: null,
   /*로그인 */
   logInDone: false,
   logInLoading: false, //로그인 시도중
@@ -31,6 +35,10 @@ export const initialState = {
   signUpData: {},
   loginData: {},
 };
+
+export const LOAD_USER_REQUEST = 'LOAD_USER_REQUEST';
+export const LOAD_USER_SUCCESS = 'LOAD_USER_SUCCESS';
+export const LOAD_USER_FAILURE = 'LOAD_USER_FAILURE';
 
 export const LOG_IN_REQUEST = 'LOG_IN_REQUEST';
 export const LOG_IN_SUCCESS = 'LOG_IN_SUCCESS';
@@ -70,6 +78,21 @@ export const logoutRequestAction = () => ({
 const reducer = (state = initialState, action) => {
   return produce(state, draft => {
     switch (action.type) {
+      /*login*/
+      case LOAD_USER_REQUEST:
+        draft.loadUserLoading = true;
+        draft.loadUserDone = false;
+        draft.loadUserError = null;
+        break;
+      case LOAD_USER_SUCCESS:
+        draft.loadUserLoading = false;
+        draft.me = action.data;
+        draft.loadUserDone = true;
+        break;
+      case LOAD_USER_FAILURE:
+        draft.loadUserLoading = false;
+        draft.loadUserError = action.error;
+        break;
       /*login*/
       case LOG_IN_REQUEST:
         draft.logInLoading = true;

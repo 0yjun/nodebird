@@ -1,6 +1,9 @@
 import { all, delay, fork, takeEvery, put, call } from 'redux-saga/effects';
 import Axios from 'axios';
 import {
+  LOAD_USER_REQUEST,
+  LOAD_USER_SUCCESS,
+  LOAD_USER_FAILURE,
   LOG_IN_REQUEST,
   LOG_IN_SUCCESS,
   LOG_IN_FAILURE,
@@ -17,6 +20,28 @@ import {
   FOLLOW_FAILURE,
   FOLLOW_SUCCESS,
 } from '../reducer/user';
+
+/* load User */
+function loadUserAPI() {
+  return Axios.get('/user');
+}
+
+function* loadUser(action) {
+  try {
+    const result = yield call(loadUserAPI, action.data);
+    console.log(action.data);
+    yield put({
+      type: LOAD_USER_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    yield put({
+      type: LOAD_USER_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
 /* login */
 function loginAPI(data) {
   return Axios.post('/user/login', data);
@@ -127,7 +152,9 @@ function* unfollow(action) {
     });
   }
 }
-
+function* watchLoadUser() {
+  yield takeEvery(LOAD_USER_REQUEST, loadUser);
+}
 function* watchLogin() {
   yield takeEvery(LOG_IN_REQUEST, login);
 }
@@ -150,5 +177,12 @@ function* watchUnfollow() {
 
 export default function* userSaga() {
   console.log('userSaga');
-  yield all([fork(watchLogin), fork(watchLogOut), fork(watchSignUp), fork(watchFollow), fork(watchUnfollow)]);
+  yield all([
+    fork(watchLoadUser),
+    fork(watchLogin),
+    fork(watchLogOut),
+    fork(watchSignUp),
+    fork(watchFollow),
+    fork(watchUnfollow),
+  ]);
 }

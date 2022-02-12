@@ -5,13 +5,21 @@ import PostForm from '../components/PostForm';
 import PostCard from '../components/PostCard';
 import AppLayout from '../components/AppLayout';
 import { LOAD_POSTS_REQUEST } from '../reducer/post';
+import { LOAD_USER_REQUEST } from '../reducer/user';
 
 const Home = () => {
   const dispatch = useDispatch();
   const { me } = useSelector(state => state.user);
   const { mainPosts, hasMorePosts, loadPostsLoading } = useSelector(state => state.post);
 
+  /*사용자 정보 불러오기*/
   useEffect(() => {
+    dispatch(
+      {
+        type: LOAD_USER_REQUEST,
+      },
+      [],
+    );
     dispatch({
       type: LOAD_POSTS_REQUEST,
     });

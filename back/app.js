@@ -21,8 +21,8 @@ passportConfig();
 //cors 설정
 app.use(
   cors({
-    origin: '*',
-    credential: false,
+    origin: 'http://localhost:3000',
+    credentials: true,
   }),
 );
 dotenv.config();
@@ -42,17 +42,6 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 
 app.get('/', (req, res) => {
   res.send('hello express');
-});
-
-app.get('/api', (req, res) => {
-  res.send('hello api');
-});
-app.get('/api/posts', (req, res) => {
-  res.json([
-    { id: 1, content: 'hello' },
-    { id: 1, content: 'hello' },
-    { id: 1, content: 'hello' },
-  ]);
 });
 
 app.use('/post', postsRouter);
