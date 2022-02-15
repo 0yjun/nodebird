@@ -8,7 +8,7 @@ import {
 import { Button, Card, Comment, Image, List, Popover } from 'antd';
 import ButtonGroup from 'antd/lib/button/button-group';
 import { Content } from 'antd/lib/layout/layout';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import PostImages from './PostImages';
@@ -16,29 +16,49 @@ import Avatar from 'antd/lib/avatar/avatar';
 import CommentForm from './CommentForm';
 import PostCardContent from './PostCardContent';
 import Link from 'next/link';
-import { REMOVE_POST_REQUEST } from '../reducer/post';
+import { LIKE_POST_REQUEST, REMOVE_POST_REQUEST, UNLIKE_POST_REQUEST } from '../reducer/post';
 import FollowButton from './FollowButton';
 
 function PostCard({ post }) {
   const id = useSelector(state => state.user.me?.id);
   const { removePostLoading } = useSelector(state => state.user);
   const dispatch = useDispatch();
-
-  const [liked, setliked] = useState(false);
   const [commentFormOpened, setCommentFormOpened] = useState(false);
-  const onToggleLike = useCallback(() => {
-    setliked(prey => !prey);
-  }, []);
+  const onLike = useCallback(() => {
+    console.log('LIKE_POST_REQUEST');
+    if (!id) {
+      return alert('로그인이 필요합니다.');
+    }
+    return dispatch({
+      type: LIKE_POST_REQUEST,
+      data: post.id,
+    });
+  }, [id]);
+  const onUnlike = useCallback(() => {
+    if (!id) {
+      return alert('로그인이 필요합니다.');
+    }
+    return dispatch({
+      type: UNLIKE_POST_REQUEST,
+      data: post.id,
+    });
+  }, [id]);
+
   const onToggleComment = useCallback(() => {
     setCommentFormOpened(prey => !prey);
   }, []);
   const onRemovePost = useCallback(() => {
-    console.log('onRemovePost postId : ', post.id);
     dispatch({
       type: REMOVE_POST_REQUEST,
       data: post.id,
     });
   }, []);
+
+  useEffect(() => {
+    console.log(post);
+  }, [post]);
+
+  const liked = post.Likers ? post.Likers.find(v => v.id === id) : null;
   return (
     <div style={{ marginBottom: 20 }}>
       <Card
@@ -46,11 +66,10 @@ function PostCard({ post }) {
         actions={[
           <RetweetOutlined key="retweet" />,
           liked ? (
-            <HeartTwoTone twoToneColor="#FF0000" key="heart" onClick={onToggleLike} />
+            <HeartTwoTone twoToneColor="#FF0000" key="heart" onClick={onUnlike} />
           ) : (
-            <HeartOutlined onClick={onToggleLike} />
+            <HeartOutlined onClick={onLike} />
           ),
-          <HeartOutlined key="heart" />,
           <MessageOutlined key="comment" onClick={onToggleComment} />,
           <Popover
             key="more"
@@ -114,9 +133,10 @@ PostCard.propTypes = {
     id: PropTypes.number,
     User: PropTypes.object,
     contnet: PropTypes.string,
-    createdAt: PropTypes.object,
+    createdAt: PropTypes.string,
     Comments: PropTypes.arrayOf(PropTypes.object),
     Images: PropTypes.arrayOf(PropTypes.object),
+    Likes: PropTypes.arrayOf(PropTypes.object),
   }).isRequired,
 };
 export default PostCard;

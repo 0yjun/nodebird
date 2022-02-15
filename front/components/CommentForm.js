@@ -10,7 +10,7 @@ const CommentForm = ({ post }) => {
   const dispatch = useDispatch();
   const [commentText, onchangeCommentText, setCommentText] = useInput('');
   const id = useSelector(state => state.user.me?.id);
-  const { addCommentLoading, addCommentDone } = useSelector(state => state.post);
+  const { addCommentLoading, addCommentDone, addCommentError } = useSelector(state => state.post);
 
   const onSubmitComment = useCallback(() => {
     console.log(post.id, commentText);
@@ -26,7 +26,12 @@ const CommentForm = ({ post }) => {
       setCommentText('');
     }
   }, [addCommentDone]);
-
+  useEffect(() => {
+    if (addCommentError) {
+      alert(addCommentError);
+      return;
+    }
+  }, [addCommentError]);
   return (
     <Form onFinish={onSubmitComment}>
       <Form.Item style={{ position: 'relative', margin: 0 }}>
