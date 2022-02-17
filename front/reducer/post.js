@@ -190,7 +190,6 @@ const reducer = (state = initialState, action) => {
         draft.removePostError = null;
         break;
       case REMOVE_POST_SUCCESS:
-        console.log('post reducer action.data:', action.data);
         draft.removePostLoading = false;
         draft.removePostDone = true;
         draft.removePostError = null;

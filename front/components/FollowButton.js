@@ -15,6 +15,9 @@ const FollowButton = ({ post }) => {
       dispatch({ type: FOLLOW_REQUEST, data: post.User.id });
     }
   }, [isFollowing]);
+  if (post.User.id === me.id) {
+    return null;
+  }
   return (
     <Button loading={followingLoading || unfollowingLoading} onClick={onClickButton}>
       {isFollowing ? '언팔로우' : '팔로우'}

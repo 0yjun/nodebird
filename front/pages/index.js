@@ -14,12 +14,9 @@ const Home = () => {
 
   /*사용자 정보 불러오기*/
   useEffect(() => {
-    dispatch(
-      {
-        type: LOAD_USER_REQUEST,
-      },
-      [],
-    );
+    dispatch({
+      type: LOAD_USER_REQUEST,
+    });
     dispatch({
       type: LOAD_POSTS_REQUEST,
     });

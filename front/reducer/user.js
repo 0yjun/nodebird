@@ -1,5 +1,4 @@
 import produce from 'immer';
-import shortid from 'shortid';
 
 export const initialState = {
   /*로그인 정보 */
@@ -146,9 +145,9 @@ const reducer = (state = initialState, action) => {
         draft.changeNickError = null;
         break;
       case CHANGE_NICKNAME_SUCCESS:
-        draft.changeNickLoading = false;
-        draft.changeNickDone = true;
-        draft.changeNickError = null;
+        draft.me.nickname = action.data.nickanme;
+        draft.changeNicknameLoading = false;
+        draft.changeNicknameDone = true;
         break;
       case CHANGE_NICKNAME_FAILURE:
         draft.changeNickLoading = false;

@@ -19,6 +19,9 @@ import {
   UNFOLLOW_SUCCESS,
   FOLLOW_FAILURE,
   FOLLOW_SUCCESS,
+  CHANGE_NICKNAME_REQUEST,
+  CHANGE_NICKNAME_SUCCESS,
+  CHANGE_NICKNAME_FAILURE,
 } from '../reducer/user';
 
 /* load User */
@@ -152,6 +155,27 @@ function* unfollow(action) {
     });
   }
 }
+
+/* signup*/
+function changeNicknameAPI(data) {
+  return Axios.patch('/user/nickname', { nickname: data });
+}
+
+function* changeNickname(action) {
+  try {
+    const result = yield call(changeNicknameAPI, action.data);
+    yield put({
+      type: CHANGE_NICKNAME_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: CHANGE_NICKNAME_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
 function* watchLoadUser() {
   yield takeEvery(LOAD_USER_REQUEST, loadUser);
 }
@@ -175,6 +199,10 @@ function* watchUnfollow() {
   yield takeEvery(UNFOLLOW_REQUEST, unfollow);
 }
 
+function* watchChangeNickname() {
+  yield takeEvery(CHANGE_NICKNAME_REQUEST, changeNickname);
+}
+
 export default function* userSaga() {
   console.log('userSaga');
   yield all([
@@ -184,5 +212,6 @@ export default function* userSaga() {
     fork(watchSignUp),
     fork(watchFollow),
     fork(watchUnfollow),
+    fork(watchChangeNickname),
   ]);
 }

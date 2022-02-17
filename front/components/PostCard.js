@@ -54,14 +54,11 @@ function PostCard({ post }) {
     });
   }, []);
 
-  useEffect(() => {
-    console.log(post);
-  }, [post]);
-
   const liked = post.Likers ? post.Likers.find(v => v.id === id) : null;
   return (
     <div style={{ marginBottom: 20 }}>
       <Card
+        key={post.id}
         cover={post.Images[0] && <PostImages images={post.Images} />}
         actions={[
           <RetweetOutlined key="retweet" />,

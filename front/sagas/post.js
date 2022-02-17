@@ -113,16 +113,13 @@ function* unlikePost(action) {
 
 /*removePost */
 function removePostAPI(data) {
-  return Axios.post('/api/post', data);
+  return Axios.delete(`/post/${data}`);
 }
 
 function* removePost(action) {
   try {
-    //const result = yield call(addPostAPI, action.data);
-    console.log('removePost run ');
-    yield delay(1000);
-    const id = shortid.generate();
-    console.log('action.data(removePost) : ', action.data);
+    console.log('removePost saga call');
+    const result = yield call(removePostAPI, action.data);
     yield put({
       type: REMOVE_POST_SUCCESS,
       data: action.data,

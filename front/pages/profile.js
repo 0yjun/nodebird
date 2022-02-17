@@ -19,8 +19,8 @@ const Profile = () => {
   return (
     <AppLayout>
       <NicknameEditForm />
-      <FollowList header="팔로잉 리스트2" data={me.followings} />
-      <FollowList header="팔로워 리스트" data={me.followers} />
+      <FollowList header="팔로잉 리스트2" data={me.Followers} />
+      <FollowList header="팔로워 리스트" data={me.Followings} />
     </AppLayout>
   );
 };
