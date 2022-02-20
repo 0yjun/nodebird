@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FOLLOW_REQUEST, UNFOLLOW_REQUEST } from '../reducer/user';
 
 const FollowButton = ({ post }) => {
-  const { me, followingLoading, unfollowingLoading } = useSelector(state => state.user);
+  const { me, followLoading, unfollowLoading } = useSelector(state => state.user);
   const dispatch = useDispatch();
   const isFollowing = me?.Followings.find(y => y.id === post.User.id);
   const onClickButton = useCallback(() => {
@@ -19,7 +19,7 @@ const FollowButton = ({ post }) => {
     return null;
   }
   return (
-    <Button loading={followingLoading || unfollowingLoading} onClick={onClickButton}>
+    <Button loading={followLoading || unfollowLoading} onClick={onClickButton}>
       {isFollowing ? '언팔로우' : '팔로우'}
     </Button>
   );
