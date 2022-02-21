@@ -29,23 +29,11 @@ export const initialState = {
   addCommentLoading: false,
   addCommentDone: false,
   addCommentError: null,
+  /*uploadImages */
+  uploadImagesLoading: false,
+  uploadImagesDone: false,
+  uploadImagesError: null,
 };
-
-export const generateDummyPost = number =>
-  Array(number)
-    .fill()
-    .map((v, i) => ({
-      id: shortid.generate(),
-      Images: [{ src: faker.image.image() }],
-      content: faker.lorem.paragraph(),
-      User: { id: shortid.generate(), nickname: faker.name.findName() },
-      Comments: [
-        {
-          User: { id: shortid.generate(), nickname: faker.name.findName() },
-          content: faker.lorem.sentence(),
-        },
-      ],
-    }));
 
 //initialState.mainPosts = initialState.mainPosts.concat(generateDummyPost(10));
 
@@ -72,6 +60,12 @@ export const REMOVE_POST_FAILURE = 'REMOVE_POST_FAILURE';
 export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
 export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
 export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
+
+export const UPLOAD_IMAGES_REQUEST = 'UPLOAD_IMAGES_REQUEST';
+export const UPLOAD_IMAGES_SUCCESS = 'UPLOAD_IMAGES_SUCCESS';
+export const UPLOAD_IMAGES_FAILURE = 'UPLOAD_IMAGES_FAILURE';
+
+export const REMOVE_IMAGE = 'REMOVE_IMAGE';
 
 export const addPost = data => ({
   type: ADD_POST_REQUEST,
@@ -140,6 +134,7 @@ const reducer = (state = initialState, action) => {
         draft.addPostDone = true;
         draft.addPostError = null;
         draft.mainPosts.unshift(action.data);
+        draft.imagePaths = [];
         break;
 
       case ADD_POST_FAILURE:
@@ -216,6 +211,24 @@ const reducer = (state = initialState, action) => {
         draft.addCommentLoading = false;
         draft.addCommentError = action.error;
         break;
+      /*uploadImages */
+      case UPLOAD_IMAGES_REQUEST:
+        draft.uploadImagesLoading = true;
+        draft.uploadImagesDone = false;
+        draft.uploadImagesError = null;
+        break;
+      case UPLOAD_IMAGES_SUCCESS:
+        draft.uploadImagesLoading = false;
+        draft.uploadImagesDone = true;
+        draft.uploadImagesError = null;
+        draft.imagePaths = action.data;
+        break;
+      case UPLOAD_IMAGES_FAILURE:
+        draft.uploadImagesLoading = false;
+        draft.uploadImagesError = action.error;
+        break;
+      case REMOVE_IMAGE:
+        draft.imagePaths = draft.imagePaths.filter((v, i) => i !== action.data);
       default:
         break;
     }

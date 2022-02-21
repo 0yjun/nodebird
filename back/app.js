@@ -11,6 +11,7 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
+const path = require('path');
 
 db.sequelize
   .sync()
@@ -42,6 +43,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(cookieParser(process.env.COOKIE_SECRET));
+app.use('/', express.static(path.join(__dirname, 'uploads')));
 
 app.get('/', (req, res) => {
   res.send('hello express');
