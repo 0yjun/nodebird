@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Post, Comment, Image, User } = require('../models');
+const { Post, Comment, Image, User, Hashtag } = require('../models');
 const { isLoggedIn } = require('./middlewares');
 const multer = require('multer');
 const path = require('path');
@@ -31,11 +31,23 @@ const upload = multer({
 /*게시글 등록 */
 router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
   try {
-    console.log('req.body : ', req.body);
     const post = await Post.create({
       content: req.body.content,
       UserId: req.user.id,
     });
+    /*헤쉬태그 등록 */
+    const hashtags = req.body.content.match(/(#[^\s#]+)/g);
+    if (hashtags) {
+      const result = await Promise.all(
+        hashtags.map(tag =>
+          Hashtag.findOrCreate({
+            where: { name: tag.slice(1).toLowerCase() },
+          }),
+        ),
+      );
+      await post.addHashtags(result.map(v => v[0]));
+    }
+    /*이미지 등록 */
     if (req.body.image) {
       if (Array.isArray(req.body.image)) {
         const images = await Promise.all(req.body.image.map(image => Image.create({ src: image })));

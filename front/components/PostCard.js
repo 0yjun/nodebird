@@ -54,6 +54,13 @@ function PostCard({ post }) {
     });
   }, []);
 
+  const onRetweet = useCallback(() => {
+    if (!id) {
+      return alert('로그인이 필요합니다.');
+    }
+    dispatchEvent;
+  });
+
   const liked = post.Likers ? post.Likers.find(v => v.id === id) : null;
   return (
     <div style={{ marginBottom: 20 }}>
@@ -61,7 +68,7 @@ function PostCard({ post }) {
         key={post.id}
         cover={post.Images[0] && <PostImages images={post.Images} />}
         actions={[
-          <RetweetOutlined key="retweet" />,
+          <RetweetOutlined key="retweet" onClick={onRetweet} />,
           liked ? (
             <HeartTwoTone twoToneColor="#FF0000" key="heart" onClick={onUnlike} />
           ) : (
