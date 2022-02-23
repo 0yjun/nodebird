@@ -41,10 +41,6 @@ export const initialState = {
   loadFollowingsDone: false,
   loadFollowingsLoading: false, //팔로우 시도중
   loadFollowingsError: false,
-  /*리트윗하기 */
-  retweetDone: false,
-  retweetLoading: false, //팔로우 시도중
-  retweetError: false,
 
   me: null,
   signUpData: {},
@@ -90,10 +86,6 @@ export const LOAD_FOLLOWERS_FAILURE = 'LOAD_FOLLOWERS_FAILURE';
 export const LOAD_FOLLOWINGS_REQUEST = 'LOAD_FOLLOWINGS_REQUEST';
 export const LOAD_FOLLOWINGS_SUCCESS = 'LOAD_FOLLOWINGS_SUCCESS';
 export const LOAD_FOLLOWINGS_FAILURE = 'LOAD_FOLLOWINGS_FAILURE';
-
-export const RETWEET_REQUEST = 'RETWEET_REQUEST';
-export const RETWEET_SUCCESS = 'RETWEET_SUCCESS';
-export const RETWEET_FAILURE = 'RETWEET_FAILURE';
 
 export const ADD_POST_TO_ME = 'ADD_POST_TO_ME';
 export const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
@@ -263,20 +255,7 @@ const reducer = (state = initialState, action) => {
         draft.loadFollowingsLoading = false;
         draft.loadFollowingsError = action.error;
         break;
-      /*retweet*/
-      case RETWEET_REQUEST:
-        draft.retweetLoading = true;
-        draft.retweetError = null;
-        draft.retweetDone = false;
-        break;
-      case RETWEET_SUCCESS:
-        draft.retweetLoading = false;
-        draft.retweetDone = true;
-        break;
-      case RETWEET_FAILURE:
-        draft.retweetLoading = false;
-        draft.retweetError = action.error;
-        break;
+
       /*ect*/
       case ADD_POST_TO_ME:
         draft.me.Posts.unshift({ id: action.data });

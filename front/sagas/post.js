@@ -1,5 +1,4 @@
-import { all, delay, fork, put, takeEvery, takeLatest, call } from 'redux-saga/effects';
-import shortid from 'shortid';
+import { all, delay, fork, put, takeLatest, call } from 'redux-saga/effects';
 import Axios from 'axios';
 import {
   ADD_COMMENT_FAILURE,
@@ -17,6 +16,9 @@ import {
   REMOVE_POST_FAILURE,
   REMOVE_POST_REQUEST,
   REMOVE_POST_SUCCESS,
+  RETWEET_FAILURE,
+  RETWEET_REQUEST,
+  RETWEET_SUCCESS,
   UNLIKE_POST_FAILURE,
   UNLIKE_POST_REQUEST,
   UNLIKE_POST_SUCCESS,
@@ -42,7 +44,7 @@ function* loadPosts(action) {
   } catch (error) {
     yield put({
       type: LOAD_POSTS_FAILURE,
-      data: error.response.data,
+      error: error.response.data,
     });
   }
 }
@@ -68,7 +70,7 @@ function* addPost(action) {
   } catch (error) {
     yield put({
       type: ADD_POST_FAILURE,
-      data: error.response.data,
+      error: error.response.data,
     });
   }
 }
@@ -89,7 +91,7 @@ function* likePost(action) {
   } catch (error) {
     yield put({
       type: LIKE_POST_FAILURE,
-      data: error.response.data,
+      error: error.response.data,
     });
   }
 }
@@ -110,7 +112,7 @@ function* unlikePost(action) {
   } catch (error) {
     yield put({
       type: UNLIKE_POST_FAILURE,
-      data: error.response.data,
+      error: error.response.data,
     });
   }
 }
@@ -135,7 +137,7 @@ function* removePost(action) {
   } catch (error) {
     yield put({
       type: REMOVE_POST_FAILURE,
-      data: error.response.data,
+      error: error.response.data,
     });
   }
 }
@@ -157,7 +159,7 @@ function* addComment(action) {
     console.log(error);
     yield put({
       type: ADD_COMMENT_FAILURE,
-      data: error.response.data,
+      error: error.response.data,
     });
   }
 }
@@ -179,7 +181,28 @@ function* uploadImages(action) {
     console.error(error);
     yield put({
       type: UPLOAD_IMAGES_FAILURE,
-      data: error.response.data,
+      error: error.response.data,
+    });
+  }
+}
+
+/* retweet*/
+function retweetAPI(data) {
+  return Axios.post(`/post/${data}/retweet`);
+}
+
+function* retweet(action) {
+  try {
+    const result = yield call(retweetAPI, action.data);
+    yield put({
+      type: RETWEET_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: RETWEET_FAILURE,
+      error: err.response.data,
     });
   }
 }
@@ -210,6 +233,10 @@ function* watchUploadImages() {
   yield takeLatest(UPLOAD_IMAGES_REQUEST, uploadImages);
 }
 
+function* watchRetweet() {
+  yield takeLatest(RETWEET_REQUEST, retweet);
+}
+
 export default function* postSaga() {
   yield all([
     fork(watchLoadPosts),
@@ -219,5 +246,6 @@ export default function* postSaga() {
     fork(watchAddComment),
     fork(watchRemovePost),
     fork(watchUploadImages),
+    fork(watchRetweet),
   ]);
 }

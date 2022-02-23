@@ -10,7 +10,7 @@ import { LOAD_USER_REQUEST } from '../reducer/user';
 const Home = () => {
   const dispatch = useDispatch();
   const { me } = useSelector(state => state.user);
-  const { mainPosts, hasMorePosts, loadPostsLoading } = useSelector(state => state.post);
+  const { mainPosts, hasMorePosts, loadPostsLoading, retweetError } = useSelector(state => state.post);
 
   /*사용자 정보 불러오기*/
   useEffect(() => {
@@ -21,6 +21,12 @@ const Home = () => {
       type: LOAD_POSTS_REQUEST,
     });
   }, []);
+
+  useEffect(() => {
+    if (retweetError) {
+      alert(retweetError);
+    }
+  }, [retweetError]);
 
   useEffect(() => {
     function onScroll() {

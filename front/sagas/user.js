@@ -31,9 +31,6 @@ import {
   REMOVE_FOLLOWER_FAILURE,
   LOAD_FOLLOWINGS_FAILURE,
   LOAD_FOLLOWINGS_SUCCESS,
-  RETWEET_REQUEST,
-  RETWEET_SUCCESS,
-  RETWEET_FAILURE,
 } from '../reducer/user';
 
 /* load User */
@@ -247,27 +244,6 @@ function* changeNickname(action) {
   }
 }
 
-/* signup*/
-function retweetAPI(data) {
-  return Axios.patch(`/user/${data}/retweet`);
-}
-
-function* retweet(action) {
-  try {
-    const result = yield call(retweetAPI, action.data);
-    yield put({
-      type: RETWEET_SUCCESS,
-      data: result.data,
-    });
-  } catch (err) {
-    console.error(err);
-    yield put({
-      type: RETWEET_FAILURE,
-      error: err.response.data,
-    });
-  }
-}
-
 function* watchLoadUser() {
   yield takeLatest(LOAD_USER_REQUEST, loadUser);
 }
@@ -306,9 +282,6 @@ function* watchRemoveFollow() {
 function* watchChangeNickname() {
   yield takeLatest(CHANGE_NICKNAME_REQUEST, changeNickname);
 }
-function* watchRetweet() {
-  yield takeLatest(RETWEET_REQUEST, retweet);
-}
 
 export default function* userSaga() {
   console.log('userSaga');
@@ -323,6 +296,5 @@ export default function* userSaga() {
     fork(watchLoadFollowers),
     fork(watchLoadFollowings),
     fork(watchChangeNickname),
-    fork(watchRetweet),
   ]);
 }
