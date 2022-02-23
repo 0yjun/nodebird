@@ -29,14 +29,14 @@ import {
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducer/user';
 
 /*laodPost */
-function loadPostsAPI(data) {
+function loadPostsAPI(lastId) {
   console.log('posts 요청 실행');
-  return Axios.get('/posts', data);
+  return Axios.get(`/posts?lastId=${lastId || 0}`);
 }
 
 function* loadPosts(action) {
   try {
-    const result = yield call(loadPostsAPI, action.data);
+    const result = yield call(loadPostsAPI, action.lastId);
     yield put({
       type: LOAD_POSTS_SUCCESS,
       data: result.data,
